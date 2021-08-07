@@ -1,19 +1,7 @@
-import enum
 from exceptions import CommandTypeNotFoundError, MemorySegmentNotFoundError, \
     BadCommandError, BadCallError
 
-
-class CommandType(enum.Enum):
-    """Command type enum to simplify command names"""
-    C_ARITHMETIC = 1
-    C_PUSH = 2
-    C_POP = 3
-    C_LABEL = 4
-    C_GOTO = 5
-    C_IF = 6
-    C_FUNCTION = 7
-    C_RETURN = 8
-    C_CALL = 9
+from constants import CommandType, MEMORY_SEGMENTS, ARITHMETIC_OPERATIONS
 
 
 class Parser:
@@ -33,18 +21,6 @@ class Parser:
     def close(self):
         if self.__file:
             self.__file.close()
-
-    @staticmethod
-    def get_arithmetic_commands():
-        """ Returns arithmetic commands"""
-        return ['add', 'sub', 'neg', 'eq', 'gt',
-                'lt', 'and', 'or', 'not']
-
-    @staticmethod
-    def get_memory_segments():
-        """ Return memory segments """
-        return ['local', 'argument', 'this', 'that',
-                'constant', 'static', 'pointer', 'temp']
 
     def _clean(self):
         """
@@ -74,7 +50,7 @@ class Parser:
             if c_type == 'push':
                 return CommandType.C_PUSH
             return CommandType.C_POP
-        elif c_type in self.get_arithmetic_commands():
+        elif c_type in ARITHMETIC_OPERATIONS:
             return CommandType.C_ARITHMETIC
         else:
             raise CommandTypeNotFoundError(f"{c_type} is not a good command type")
@@ -89,7 +65,7 @@ class Parser:
                 return command[0]
             raise BadCommandError(f"no need to add extra argument '{command[0]}' is enough")
         elif len(command) == 3:
-            if command[1] in self.get_memory_segments():
+            if command[1] in MEMORY_SEGMENTS:
                 return command[1]
             raise MemorySegmentNotFoundError(f"No memory segment with '{command[1]}' name!")
         raise BadCommandError("This command is not an appropriate vm code")
