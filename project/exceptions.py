@@ -22,3 +22,7 @@ class BadCommandError(ValueError):
 class BadCallError(ValueError):
     """This exception is raised when calling an unappropriate method"""
     pass
+
+
+class ConstantHasNoPOPError(ValueError):
+    """This exception is raised when poping into constatn"""
